@@ -30,14 +30,15 @@ namespace Recap
             this.InitializeComponent();
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(AppTitleBar);
+            articleViewModel = ArticleViewModel.Instance;
             Frame.Navigated += On_Navigated;
         }
 
         private void MainNavView_Loaded(object sender, RoutedEventArgs e)
+
         {
             Debug.WriteLine("MNV_Loaded called");
 
-            articleViewModel = ArticleViewModel.Instance;
             articleViewModel.UpdateArticles();
 
             MainNavView.SelectedItem = MainNavView.MenuItems[0];
