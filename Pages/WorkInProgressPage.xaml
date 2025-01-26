@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Recap.Pages.WorkInProgressPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Recap.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource LayerOnMicaBaseAltFillColorDefault}">
+
+    <Grid>
+        <StackPanel x:Name="MotImplementedPanel" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <FontIcon Glyph="&#xF78A;" FontSize="50" Margin="10"/>
+            <TextBlock Text="I'm really sorry, this isn't implemented yet." FontSize="24"/>
+            <TextBlock Text="I'm working really hard to bring you the best experience." FontSize="12" HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Page>

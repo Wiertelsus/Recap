@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Recap (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Recap (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
