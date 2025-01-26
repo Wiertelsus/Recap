@@ -17,3 +17,7 @@ Well first of all i'm planning to implement the missing filtering features: Read
 ## The app crashes/misbehaves/i want to suggest something
 
 You're welcome to drop an issue for all of those! I'm always open to changes!
+
+# How do i install?
+
+Unfortunately, because i do not have a trusted certificate yet, you must run ```Add-AppxPackage -AllowUnsigned Recap.msix``` in an administrator terminal to install the app.
