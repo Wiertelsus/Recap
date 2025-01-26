@@ -16,8 +16,8 @@ namespace Recap
     {
         public ArticlePage()
         {
-            ViewModel = ArticleViewModel.Instance;
             this.InitializeComponent();
+            ViewModel = ArticleViewModel.Instance;
             this.DataContext = ViewModel; // Set the DataContext to the ViewModel
         }
 

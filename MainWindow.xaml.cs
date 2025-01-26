@@ -30,6 +30,7 @@ namespace Recap
             this.InitializeComponent();
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(AppTitleBar);
+            Frame.Navigated += On_Navigated;
         }
 
         private void MainNavView_Loaded(object sender, RoutedEventArgs e)
@@ -38,8 +39,6 @@ namespace Recap
 
             articleViewModel = ArticleViewModel.Instance;
             articleViewModel.UpdateArticles();
-
-            Frame.Navigated += On_Navigated; // Add handler for the frame navigation event
 
             MainNavView.SelectedItem = MainNavView.MenuItems[0];
             Frame.Navigate(GetPageType("ArticlePage"));
@@ -189,6 +188,7 @@ namespace Recap
             {
                 feedInfoBar.Content = new TextBlock { Text = $"Eek! Exception thrown! Message: {ex.Message}" };
                 feedInfoBar.IsOpen = true;
+                Debug.WriteLine(ex.Message);
             }
         }
 

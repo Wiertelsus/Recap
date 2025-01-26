@@ -59,10 +59,14 @@
                                                TextTrimming="CharacterEllipsis"
                                                TextWrapping="NoWrap"/>
 
+                                    <!--  Not all pages return a favicon, need to make a more sophisticated favicon downloader
+                                    
                                     <ImageIcon Source="{x:Bind ArticleFeed.FavIconUri}" 
                                                Width="16" 
                                                Height="16"
                                                Margin="5,-20,0,0"/>
+                                    
+                                    -->
 
                                     <TextBlock Padding="10,2,0,20"
                                                VerticalAlignment="Top"

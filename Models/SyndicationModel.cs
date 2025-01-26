@@ -18,7 +18,7 @@ namespace Recap.Models
     {
         public static async Task<List<Article>> GetArticlesAsync()
         {
-            List<Article> articles = new([]);
+            List<Article> articles = new();
 
             StorageFolder localFolder = ApplicationData.Current.LocalFolder;
             StorageFile localFile = await localFolder.CreateFileAsync("Feeds.json", CreationCollisionOption.OpenIfExists);
@@ -27,30 +27,38 @@ namespace Recap.Models
             {
 
                 string json = await FileIO.ReadTextAsync(localFile);
-                List<Feed> feeds = new List<Feed>(JsonSerializer.Deserialize<List<Feed>>(json)); //Create a new feed list from data saved in local app storage.
+                List<Feed> feeds = JsonSerializer.Deserialize<List<Feed>>(json) ?? new List<Feed>();
 
-                foreach(Feed feed in feeds)
+                foreach (Feed feed in feeds)
                 {
-                    Uri uri = feed.FeedUri; //Assign URI to that of each of the feeds in the "feeds" list
+                    Uri uri = feed.FeedUri;
 
                     Debug.WriteLine($"Retrieving feed from: {uri}");
-                    SyndicationFeed syndicationFeed = await new SyndicationClient().RetrieveFeedAsync(uri); // Define feed and retrieve asynchronously from URI
-
+                    SyndicationFeed syndicationFeed = null;
+                    try
+                    {
+                        syndicationFeed = await new SyndicationClient().RetrieveFeedAsync(uri);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Error retrieving syndication feed: {ex.Message}");
+                        continue;
+                    }
 
                     if (syndicationFeed == null)
                     {
                         Debug.WriteLine("Syndication feed is null.");
-                        return articles;
+                        continue;
                     }
 
                     foreach (SyndicationItem item in syndicationFeed.Items)
                     {
                         try
                         {
-                            Article article = new() // Create articles from data retrieved
+                            Article article = new()
                             {
                                 ArticleTitle = item.Title?.Text ?? "No Title",
-                                AuthorName = item.Authors.FirstOrDefault()?.Name.ToString() ?? "Unknown Author",
+                                AuthorName = item.Authors.FirstOrDefault()?.Name ?? "Unknown Author",
                                 PublishedDate = item.PublishedDate.DateTime,
                                 ArticleSummary = item.Summary?.Text ?? "No Description",
                                 ArticleUri = item.Links.FirstOrDefault()?.Uri ?? new Uri("about:blank"),
@@ -59,14 +67,13 @@ namespace Recap.Models
                                 IsRead = false
                             };
 
-                            articles.Add(article); // Pack articles into a list
+                            articles.Add(article);
                         }
                         catch (Exception ex)
                         {
                             Debug.WriteLine($"Error processing item: {ex.Message}");
                         }
                     }
-
                 }
                 Debug.WriteLine($"Retrieved {articles.Count} articles.");
             }

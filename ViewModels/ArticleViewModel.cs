@@ -89,10 +89,23 @@ namespace Recap.ViewModels
 
         public async Task UpdateArticles()
         {
-            List<Article> retrievedArticles = await SyndicationModel.GetArticlesAsync();
-            await CacheArticlesAsync(retrievedArticles);
-            RefreshArticles(retrievedArticles);
-            Debug.WriteLine("Updating articles");
+            try
+            {
+                Debug.WriteLine("UpdateArticles: Starting to retrieve articles.");
+                List<Article> retrievedArticles = await SyndicationModel.GetArticlesAsync();
+                Debug.WriteLine("UpdateArticles: Retrieved articles successfully.");
+
+                await CacheArticlesAsync(retrievedArticles);
+                Debug.WriteLine("UpdateArticles: Cached articles successfully.");
+
+                RefreshArticles(retrievedArticles);
+                Debug.WriteLine("UpdateArticles: Refreshed articles successfully.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"UpdateArticles: Exception occurred - {ex.Message}");
+                // Optionally, handle the exception (e.g., show a message to the user)
+            }
         }
 
         private async void LoadArticles()
