@@ -13,6 +13,7 @@ using Windows.Services.Maps;
 using Windows.Devices.PointOfService;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using Windows.ApplicationModel;
 
 namespace Recap
 {
@@ -29,9 +30,16 @@ namespace Recap
         public SettingsPage()
         {
             this.InitializeComponent();
-            AppVersion = $"Version {Assembly.GetExecutingAssembly().GetName().Version}";
+            AppVersion = $"Version {GetAppVersion()}";
             LoadFeedsAsync();
             articleViewModel = ArticleViewModel.Instance;
+        }
+
+        private string GetAppVersion()
+        {
+            // Get the package version of the app
+            PackageVersion version = Package.Current.Id.Version;
+            return $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
         }
 
         private async Task LoadFeedsAsync()
