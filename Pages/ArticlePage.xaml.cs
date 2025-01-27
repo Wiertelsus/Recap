@@ -1,18 +1,15 @@
-
 using System;
 using System.Diagnostics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Recap.ViewModels;
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace Recap
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ArticlePage : Page
+    public partial class ArticlePage : Page
     {
         public ArticlePage()
         {
@@ -30,14 +27,13 @@ namespace Recap
             {
                 try
                 {
-                    Article article = listView.SelectedItem as Article;
-
-                    if (article != null)
+                    if (listView.SelectedItem is Article article)
                     {
+                        // Display the selected article in the WebView
                         Debug.WriteLine(article.ArticleTitle);
 
                         ArticleWebView.Source = article.ArticleUri;
-                        ArticleNotOpenPanel.Visibility = Visibility.Collapsed;
+                        WelcomeWebViewPanel.Visibility = Visibility.Collapsed;
                     }
                 }
                 catch (Exception ex)
@@ -45,12 +41,27 @@ namespace Recap
                     Debug.WriteLine($"Exception: {ex} with message: {ex.Message}");
                 }
             }
+            else if (listView.Items.Count == 0)
+            {
+                // Show the welcome panel if there are no items in the list
+                WelcomeFeedPanel.Visibility = Visibility.Visible;
+            }
             else
             {
                 Debug.WriteLine("listView is null");
             }
         }
 
+        private async void RefreshContainer_RefreshRequested(object sender, RefreshRequestedEventArgs args)
+        {
+            if (ViewModel != null)
+            {
+                // Update articles when refresh is requested
+                await ViewModel.UpdateArticles();
+            }
+        }
+
         public ArticleViewModel ViewModel { get; set; }
     }
 }
+

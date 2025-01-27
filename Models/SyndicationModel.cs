@@ -23,10 +23,13 @@ namespace Recap.Models
             StorageFolder localFolder = ApplicationData.Current.LocalFolder;
             StorageFile localFile = await localFolder.CreateFileAsync("Feeds.json", CreationCollisionOption.OpenIfExists);
 
+            SyndicationFeed syndicationFeed = null;
+
             try
             {
-
+                // Read the content of the Feeds.json file
                 string json = await FileIO.ReadTextAsync(localFile);
+                // Deserialize the JSON content into a list of Feed objects
                 List<Feed> feeds = JsonSerializer.Deserialize<List<Feed>>(json) ?? new List<Feed>();
 
                 foreach (Feed feed in feeds)
@@ -34,9 +37,9 @@ namespace Recap.Models
                     Uri uri = feed.FeedUri;
 
                     Debug.WriteLine($"Retrieving feed from: {uri}");
-                    SyndicationFeed syndicationFeed = null;
                     try
                     {
+                        // Retrieve the syndication feed from the URI
                         syndicationFeed = await new SyndicationClient().RetrieveFeedAsync(uri);
                     }
                     catch (Exception ex)
@@ -81,6 +84,7 @@ namespace Recap.Models
             {
                 Debug.WriteLine($"Error retrieving feed: {ex.Message}");
             }
+            // Return the list of articles, ordered by published date in descending order
             return articles.OrderByDescending(article => article.PublishedDate).ToList();
         }
     }

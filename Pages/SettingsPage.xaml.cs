@@ -36,6 +36,7 @@ namespace Recap
 
         private async Task LoadFeedsAsync()
         {
+            // Load feeds from the local storage
             StorageFolder localFolder = ApplicationData.Current.LocalFolder;
             StorageFile feedsFile = await localFolder.CreateFileAsync("Feeds.json", CreationCollisionOption.OpenIfExists);
 
@@ -52,6 +53,7 @@ namespace Recap
 
         private async Task SaveFeedsAsync()
         {
+            // Save feeds to the local storage
             StorageFolder localFolder = ApplicationData.Current.LocalFolder;
             StorageFile feedsFile = await localFolder.CreateFileAsync("feeds.json", CreationCollisionOption.ReplaceExisting);
             string json = JsonSerializer.Serialize(Feeds);
@@ -64,7 +66,7 @@ namespace Recap
 
             ListView feedsListView = FeedsListView;
 
-            feedsListView.ItemsSource = Feeds; // Define ItemsSource of FeedsListView
+            feedsListView.ItemsSource = Feeds; // Set ItemsSource of FeedsListView
             feedsListView.SelectionMode = ListViewSelectionMode.Multiple;
 
             dialog.PrimaryButtonText = "Close";
@@ -75,6 +77,7 @@ namespace Recap
 
             if (result == ContentDialogResult.Secondary)
             {
+                // Remove selected feeds and save the updated list
                 var selectedFeeds = feedsListView.SelectedItems.Cast<Feed>().ToList();
                 foreach (var feed in selectedFeeds)
                 {
@@ -82,7 +85,6 @@ namespace Recap
                 }
                 await SaveFeedsAsync();
                 await articleViewModel.UpdateArticles();
-                
             }
         }
     }

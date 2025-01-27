@@ -20,8 +20,37 @@ namespace Recap.ViewModels
         public Uri ArticleUri { get; set; }
         public string ArticleSummary { get; set; }
         public bool IsToday { get { return DateTime.Today == PublishedDate; } }
-        public bool IsSaved { get; set; }
-        public bool IsRead { get; set; }
+
+
+        //TODO: make IsSaved and IsRead be able to get read and saved to a file for future reference in filters.
+        private bool isSaved;
+        public bool IsSaved
+        {
+            get => isSaved;
+            set
+            {
+                if (isSaved != value)
+                {
+                    isSaved = value;
+                    OnPropertyChanged(nameof(IsSaved));
+                }
+            }
+        }
+
+        private bool isRead;
+        public bool IsRead
+        {
+            get => isRead;
+            set
+            {
+                if (isRead != value)
+                {
+                    isRead = value;
+                    OnPropertyChanged(nameof(IsRead));
+                }
+            }
+        }
+
         public Feed ArticleFeed { get; set; }
         public string DisplayablePublishedDate { get { return PublishedDate.ToString("dd.MM.yy, HH:mm"); } }
 
@@ -104,12 +133,12 @@ namespace Recap.ViewModels
             catch (Exception ex)
             {
                 Debug.WriteLine($"UpdateArticles: Exception occurred - {ex.Message}");
-                // Optionally, handle the exception (e.g., show a message to the user)
             }
         }
 
         private async void LoadArticles()
         {
+            // Load articles from cache or update if cache is empty
             List<Article> cachedArticles = await GetCachedArticlesAsync();
             if (cachedArticles != null && cachedArticles.Any())
             {
@@ -123,6 +152,7 @@ namespace Recap.ViewModels
 
         private void RefreshArticles(List<Article> articlesList)
         {
+            // Refresh the articles list and apply the current filter
             allArticles = articlesList;
             ApplyFilter();
         }
@@ -130,8 +160,21 @@ namespace Recap.ViewModels
         private void ApplyFilter()
         {
             Articles.Clear();
+            if (allArticles == null)
+            {
+                Debug.WriteLine("allArticles is null.");
+                return;
+            }
+
+            // Filter articles based on the selected filter tag
             var filteredArticles = allArticles.Where(article =>
             {
+                if (article == null)
+                {
+                    Debug.WriteLine("Null article found in allArticles.");
+                    return false;
+                }
+
                 switch (selectedFilterTag)
                 {
                     case "TodayFilter":
@@ -147,6 +190,7 @@ namespace Recap.ViewModels
                 }
             });
 
+            // Add filtered articles to the observable collection
             foreach (var article in filteredArticles)
             {
                 Articles.Add(article);
@@ -155,6 +199,7 @@ namespace Recap.ViewModels
 
         private async Task CacheArticlesAsync(List<Article> articles)
         {
+            // Cache articles to a temporary file
             StorageFolder tempFolder = ApplicationData.Current.TemporaryFolder;
             StorageFile cacheFile = await tempFolder.CreateFileAsync(CacheFileName, CreationCollisionOption.ReplaceExisting);
             string json = JsonSerializer.Serialize(articles);
@@ -165,6 +210,7 @@ namespace Recap.ViewModels
         {
             try
             {
+                // Retrieve cached articles from the temporary file
                 StorageFolder tempFolder = ApplicationData.Current.TemporaryFolder;
                 StorageFile cacheFile = await tempFolder.GetFileAsync(CacheFileName);
                 string json = await FileIO.ReadTextAsync(cacheFile);
@@ -178,6 +224,7 @@ namespace Recap.ViewModels
 
         public async Task UpdateCacheAsync(List<Article> articles)
         {
+            // Update the cache and refresh the articles list
             await CacheArticlesAsync(articles);
             RefreshArticles(articles);
         }

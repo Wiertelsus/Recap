@@ -125,6 +125,6 @@
                  Background="{ThemeResource SystemControlAltLowAcrylicElementBrush}"
                  Margin="-2"/>
 
-        <ContentDialog x:Name="AddFeedDialog" Background="{ThemeResource SystemControlAltLowAcrylicElementBrush}"/>
+        <ContentDialog x:Name="AddFeedDialog" Background="{ThemeResource SystemControlAltHighAcrylicElementBrush}"/>
     </Grid>
 </Window>
