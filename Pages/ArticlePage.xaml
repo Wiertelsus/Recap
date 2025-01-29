@@ -29,7 +29,7 @@
 
                 <ListView ItemsSource="{Binding Articles}"
                       HorizontalAlignment="Stretch" 
-                      VerticalAlignment="Top"
+                      VerticalAlignment="Stretch"
                       SelectionChanged="ArticlePageListView_SelectionChanged"
                       SelectionMode="Single"
                       Background="Transparent"
