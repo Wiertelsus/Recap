@@ -19,7 +19,7 @@ namespace Recap.ViewModels
         public DateTimeOffset PublishedDate { get; set; }
         public Uri ArticleUri { get; set; }
         public string ArticleSummary { get; set; }
-        public bool IsToday { get { return DateTime.Today == PublishedDate; } }
+        public bool IsToday { get { return PublishedDate.Date == DateTime.Today; } }
 
 
         //TODO: make IsSaved and IsRead be able to get read and saved to a file for future reference in filters.
@@ -178,7 +178,7 @@ namespace Recap.ViewModels
                 switch (selectedFilterTag)
                 {
                     case "TodayFilter":
-                        return article.PublishedDate.Date == DateTime.Today;
+                        return article.IsToday;
                     case "UnreadFilter":
                         return !article.IsRead;
                     case "SavedFilter":
