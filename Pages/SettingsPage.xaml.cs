@@ -51,7 +51,7 @@ namespace Recap
             if (feedsFile != null)
             {
                 string json = await FileIO.ReadTextAsync(feedsFile);
-                Feeds = JsonSerializer.Deserialize<ObservableCollection<Feed>>(json) ?? new ObservableCollection<Feed>();
+                Feeds = JsonSerializer.Deserialize<ObservableCollection<Feed>>(json, SerializationContext.Default.ObservableCollectionFeed) ?? new ObservableCollection<Feed>();
             }
             else
             {
@@ -64,7 +64,7 @@ namespace Recap
             // Save feeds to the local storage
             StorageFolder localFolder = ApplicationData.Current.LocalFolder;
             StorageFile feedsFile = await localFolder.CreateFileAsync("feeds.json", CreationCollisionOption.ReplaceExisting);
-            string json = JsonSerializer.Serialize(Feeds);
+            string json = JsonSerializer.Serialize(Feeds, SerializationContext.Default.ObservableCollectionFeed);
             await FileIO.WriteTextAsync(feedsFile, json);
         }
 
