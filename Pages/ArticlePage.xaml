@@ -38,7 +38,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="vm:Article">
                             <StackPanel Background="Transparent">
-                                <TextBlock Padding="0,10"
+                                    <TextBlock Padding="0,10"
                                        VerticalAlignment="Top" 
                                        HorizontalAlignment="Left" 
                                        FontWeight="SemiBold" FontSize="16" 
@@ -46,16 +46,12 @@
                                        TextWrapping="NoWrap"
                                        TextTrimming="CharacterEllipsis"/>
 
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-
                                     <Grid Grid.Column="0" x:Name="FeedDateGrid">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="50"/>
+
                                         </Grid.ColumnDefinitions>
 
                                         <TextBlock Grid.Column="0"
@@ -76,7 +72,7 @@
                                         -->
 
                                         <TextBlock Grid.Column="1"
-                                               Padding="10,0,0,0"
+                                                   Padding="10,2,0,0"
                                                    VerticalAlignment="Top"
                                                    HorizontalAlignment="Left"
                                                    FontWeight="SemiLight" FontSize="11"
@@ -84,10 +80,40 @@
                                                    TextWrapping="NoWrap"
                                                    TextTrimming="CharacterEllipsis"/>
 
+                                        <Button Grid.Column="2"
+                                            Margin="15,-8,0,0"
+                                            Padding="0,0,0,0"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Left"
+                                            HorizontalContentAlignment="Center"
+                                            Background="Transparent"
+                                            BorderBrush="Transparent"
+                                            Click="MarkAsReadButton_Click">
+
+                                            <FontIcon Glyph="&#xE789;" FontSize="14"/>
+
+                                        </Button>
+
+
+                                        <Button Grid.Column="2"
+                                            Margin="10,-8,0,0"
+                                            Padding="0,0,0,0"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Right"
+                                            HorizontalContentAlignment="Center"
+                                            Background="Transparent"
+                                            BorderBrush="Transparent"
+                                            Click="PinButton_Click">
+
+                                            <FontIcon Glyph="&#xE718;" FontSize="14"/>
+
+                                        </Button>
 
                                     </Grid>
-                                </Grid>
-                            </StackPanel>
+
+
+                                </StackPanel>
+
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
