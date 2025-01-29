@@ -30,7 +30,7 @@ namespace Recap.Models
                 // Read the content of the Feeds.json file
                 string json = await FileIO.ReadTextAsync(localFile);
                 // Deserialize the JSON content into a list of Feed objects
-                List<Feed> feeds = JsonSerializer.Deserialize<List<Feed>>(json) ?? new List<Feed>();
+                List<Feed> feeds = JsonSerializer.Deserialize<List<Feed>>(json, SerializationContext.Default.ListFeed) ?? new List<Feed>();
 
                 foreach (Feed feed in feeds)
                 {

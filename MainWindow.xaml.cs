@@ -32,6 +32,7 @@ namespace Recap
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(AppTitleBar);
             articleViewModel = ArticleViewModel.Instance;
+
         }
 
         private void MainNavView_Loaded(object sender, RoutedEventArgs e)
@@ -156,7 +157,7 @@ namespace Recap
                     Uri feedUri = new Uri(feedUrlTextBox.Text);
                     string json = await FileIO.ReadTextAsync(localFile);
 
-                    List<Feed> feedList = string.IsNullOrEmpty(json) ? new List<Feed>() : JsonSerializer.Deserialize<List<Feed>>(json);
+                    List<Feed> feedList = string.IsNullOrEmpty(json) ? new List<Feed>() : JsonSerializer.Deserialize<List<Feed>>(json, SerializationContext.Default.ListFeed);
 
                     Feed existingFeed = feedList.Find(data => data.FeedUri == feedUri);
 
@@ -175,7 +176,7 @@ namespace Recap
                         feedInfoBar.IsOpen = true;
                         Debug.WriteLine($"feed added: {feedUri}");
 
-                        await FileIO.WriteTextAsync(localFile, JsonSerializer.Serialize(feedList, new JsonSerializerOptions { WriteIndented = true }));
+                        await FileIO.WriteTextAsync(localFile, JsonSerializer.Serialize(feedList, SerializationContext.Default.ListFeed));
 
                         await articleViewModel.UpdateCacheAsync(await SyndicationModel.GetArticlesAsync());
                     }

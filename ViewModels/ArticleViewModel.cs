@@ -202,7 +202,7 @@ namespace Recap.ViewModels
             // Cache articles to a temporary file
             StorageFolder tempFolder = ApplicationData.Current.TemporaryFolder;
             StorageFile cacheFile = await tempFolder.CreateFileAsync(CacheFileName, CreationCollisionOption.ReplaceExisting);
-            string json = JsonSerializer.Serialize(articles);
+            string json = JsonSerializer.Serialize(articles, SerializationContext.Default.ListArticle);
             await FileIO.WriteTextAsync(cacheFile, json);
         }
 
@@ -214,7 +214,9 @@ namespace Recap.ViewModels
                 StorageFolder tempFolder = ApplicationData.Current.TemporaryFolder;
                 StorageFile cacheFile = await tempFolder.GetFileAsync(CacheFileName);
                 string json = await FileIO.ReadTextAsync(cacheFile);
-                return JsonSerializer.Deserialize<List<Article>>(json);
+                
+                
+                return JsonSerializer.Deserialize(json, SerializationContext.Default.ListArticle);
             }
             catch (FileNotFoundException)
             {
