@@ -4,6 +4,7 @@
 name: WinUI 3 MSIX app
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
   pull_request:
