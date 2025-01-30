@@ -13,10 +13,6 @@ namespace Recap.Helpers
 {
     public class CacheHelper
     {
-        //Use singleton object pattern
-        private static readonly Lazy<CacheHelper> lazyInstance = new Lazy<CacheHelper>(() => new CacheHelper());
-        public static CacheHelper Instance => lazyInstance.Value;
-
 
         //Define the cache file name
         private static readonly string cacheFileString = "CachedArticles.json";
@@ -35,7 +31,7 @@ namespace Recap.Helpers
             
             await FileIO.WriteTextAsync(cacheFile, json);
 
-            Debug.WriteLine("Caching articles");
+            Debug.WriteLine("CacheArticlesAsync: Caching articles");
         }
 
 
@@ -48,7 +44,7 @@ namespace Recap.Helpers
                 StorageFile cacheFile = await tempFolder.GetFileAsync(cacheFileString);
                 string json = await FileIO.ReadTextAsync(cacheFile);
 
-                Debug.WriteLine("Retrieving from cache");
+                Debug.WriteLine("GetCachedArticlesAsync: Retrieving from cache");
 
                 return JsonSerializer.Deserialize(json, SerializationContext.Default.ListArticle);
             }

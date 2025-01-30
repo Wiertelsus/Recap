@@ -78,6 +78,7 @@ namespace Recap.ViewModels
         private string selectedFilterTag;
         private List<Article> allArticles = new List<Article>();
 
+        //Define the CacheHelper
         private CacheHelper cacheHelper;
 
         public ObservableCollection<Article> Articles
@@ -110,7 +111,7 @@ namespace Recap.ViewModels
         private ArticleViewModel()
         {
 
-            cacheHelper = CacheHelper.Instance;
+            cacheHelper = new();
             LoadArticles();
         }
 
@@ -157,8 +158,6 @@ namespace Recap.ViewModels
         private void RefreshArticles(List<Article> articlesList)
         {
             // Refresh and cache the articles list and apply the current filter
-            
-            
             allArticles = articlesList;
             ApplyFilter();
         }
