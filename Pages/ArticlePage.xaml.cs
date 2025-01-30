@@ -43,7 +43,7 @@ namespace Recap
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Exception: {ex} with message: {ex.Message}");
+                    Debug.WriteLine($"Exception in ArticlePageListView_SelectionChanged: {ex} with message: {ex.Message}");
                 }
             }
             else if (listView.Items.Count == 0)
@@ -53,7 +53,7 @@ namespace Recap
             }
             else
             {
-                Debug.WriteLine("listView is null");
+                Debug.WriteLine("ArticlePageListView_SelectionChanged: listView is null");
             }
         }
 
@@ -89,13 +89,13 @@ namespace Recap
 
         private async Task MarkAsReadAsync(Article article)
         {
-            Debug.WriteLine($"Marking as read: {article}");
+            Debug.WriteLine($"MarkAsReadAsync: Marking as read - {article}");
             article.IsRead = true;
         }
 
         private async Task MarkAsSavedAsync(Article article)
         {
-            Debug.WriteLine($"Marking as saved: {article}");
+            Debug.WriteLine($"MarkAsSavedAsync: Marking as saved - {article}");
             article.IsSaved = true;
         }
 

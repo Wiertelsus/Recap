@@ -168,7 +168,7 @@ namespace Recap.ViewModels
             Articles.Clear();
             if (allArticles == null)
             {
-                Debug.WriteLine("allArticles is null.");
+                Debug.WriteLine("ApplyFilter: allArticles is null.");
                 return;
             }
 
@@ -177,7 +177,7 @@ namespace Recap.ViewModels
             {
                 if (article == null)
                 {
-                    Debug.WriteLine("Null article found in allArticles.");
+                    Debug.WriteLine("ApplyFilter: Null article found in allArticles.");
                     return false;
                 }
 

@@ -63,8 +63,8 @@ namespace Recap
                 Type pageType = GetPageType(args.SelectedItemContainer?.Tag.ToString());
                 string filterType = NavigationViewItemExtensions.GetFilterTag(args.SelectedItemContainer);
 
-                Debug.WriteLine("pageType is " + pageType.Name);
-                Debug.WriteLine("filterType is " + filterType);
+                Debug.WriteLine($"MainNavView_SelectionChanged: pageType - {pageType.Name}");
+                Debug.WriteLine($"MainNavView_SelectionChanged: filterType - {filterType}");
 
                 // Set the selected filter tag and navigate to the selected page
                 articleViewModel.SelectedFilterTag = filterType;
@@ -74,7 +74,7 @@ namespace Recap
             {
                 // Navigate to the SettingsPage if the settings item is selected
                 Type pageType = GetPageType("SettingsPage");
-                Debug.WriteLine("pageType is SettingsPage");
+                Debug.WriteLine("MainNavView_SelectionChanged: pageType - SettingsPage");
                 MainNavView_Navigate(pageType, args.RecommendedNavigationTransitionInfo);
             }
         }
@@ -87,18 +87,18 @@ namespace Recap
 
             if (Frame.BackStack.Count > 0)
             {
-                Debug.WriteLine("prePageType is " + prePageType.Name);
+                Debug.WriteLine($"MainNavView_Navigate: prePageType - {prePageType}");
             }
             else
             {
-                Debug.WriteLine("prePageType is null");
+                Debug.WriteLine("MainNavView_Navigate: prePageType - null");
             }
 
             // Navigate to the new page if it is different from the current page
             if (prePageType is not null && !Type.Equals(prePageType, pageType))
             {
                 Frame.Navigate(pageType, null, transitionInfo);
-                Debug.WriteLine("navigating to " + pageType);
+                Debug.WriteLine($"MainNavView_Navigate: Navigating to - {pageType}");
             }
         }
 
@@ -149,8 +149,6 @@ namespace Recap
                     // Retrieve the syndication feed from the provided URL
                     SyndicationFeed syndicationFeed = await new SyndicationClient().RetrieveFeedAsync(new Uri(feedUrlTextBox.Text));
 
-                    Debug.WriteLine($"icon: {syndicationFeed.IconUri}");
-
                     Feed feed = new Feed { FeedName = syndicationFeed.Title.Text ?? new Uri(feedUrlTextBox.Text).Host, FeedUri = new Uri(feedUrlTextBox.Text) };
 
                     Uri feedUri = new Uri(feedUrlTextBox.Text);
@@ -165,7 +163,7 @@ namespace Recap
                         // Show a message if the feed already exists
                         feedInfoBar.Content = new TextBlock { Text = "That feed has already been added!" };
                         feedInfoBar.IsOpen = true;
-                        Debug.WriteLine($"duplicate uri not added: {feedUrlTextBox.Text}");
+                        Debug.WriteLine($"DialogAddButtonClick: Duplicate uri not added - {feedUrlTextBox.Text}");
                     }
                     else
                     {
@@ -173,7 +171,7 @@ namespace Recap
                         feedList.Add(feed);
                         feedInfoBar.Content = new TextBlock { Text = $"{feed.FeedName} added successfully!" };
                         feedInfoBar.IsOpen = true;
-                        Debug.WriteLine($"feed added: {feedUri}");
+                        Debug.WriteLine($"DialogAddButtonClick: Feed added - {feedUri}");
 
                         await FileIO.WriteTextAsync(localFile, JsonSerializer.Serialize(feedList, SerializationContext.Default.ListFeed));
 
@@ -185,7 +183,7 @@ namespace Recap
                     // Show a message if the URL is invalid
                     feedInfoBar.Content = new TextBlock { Text = "Uhoh. Couldn't add feed, are you sure that was a valid URL?" };
                     feedInfoBar.IsOpen = true;
-                    Debug.WriteLine($"malformed or null uri: {feedUrlTextBox.Text}");
+                    Debug.WriteLine($"DialogAddButtonClick: Malformed or null uri - {feedUrlTextBox.Text}");
                 }
             }
             catch (Exception ex)
@@ -193,7 +191,7 @@ namespace Recap
                 // Show a message if an exception occurs
                 feedInfoBar.Content = new TextBlock { Text = $"Eek! Exception thrown! Message: {ex.Message}" };
                 feedInfoBar.IsOpen = true;
-                Debug.WriteLine(ex.Message);
+                Debug.WriteLine($"DialogAddButtonClick: Exception - {ex} with message - {ex.Message}");
             }
         }
 
