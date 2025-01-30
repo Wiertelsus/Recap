@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Recap.Helpers;
 using Recap.Models;
 using Windows.Storage;
 
@@ -74,9 +75,10 @@ namespace Recap.ViewModels
         public static ArticleViewModel Instance => lazyInstance.Value;
 
         private ObservableCollection<Article> articles = new ObservableCollection<Article>();
-        private const string CacheFileName = "CachedArticles.json";
         private string selectedFilterTag;
         private List<Article> allArticles = new List<Article>();
+
+        private CacheHelper cacheHelper;
 
         public ObservableCollection<Article> Articles
         {
@@ -107,6 +109,8 @@ namespace Recap.ViewModels
 
         private ArticleViewModel()
         {
+
+            cacheHelper = CacheHelper.Instance;
             LoadArticles();
         }
 
@@ -124,7 +128,7 @@ namespace Recap.ViewModels
                 List<Article> retrievedArticles = await SyndicationModel.GetArticlesAsync();
                 Debug.WriteLine("UpdateArticles: Retrieved articles successfully.");
 
-                await CacheArticlesAsync(retrievedArticles);
+                await cacheHelper.CacheArticlesAsync(retrievedArticles);
                 Debug.WriteLine("UpdateArticles: Cached articles successfully.");
 
                 RefreshArticles(retrievedArticles);
@@ -139,7 +143,7 @@ namespace Recap.ViewModels
         private async void LoadArticles()
         {
             // Load articles from cache or update if cache is empty
-            List<Article> cachedArticles = await GetCachedArticlesAsync();
+            List<Article> cachedArticles = await cacheHelper.GetCachedArticlesAsync();
             if (cachedArticles != null && cachedArticles.Any())
             {
                 RefreshArticles(cachedArticles);
@@ -152,7 +156,9 @@ namespace Recap.ViewModels
 
         private void RefreshArticles(List<Article> articlesList)
         {
-            // Refresh the articles list and apply the current filter
+            // Refresh and cache the articles list and apply the current filter
+            
+            
             allArticles = articlesList;
             ApplyFilter();
         }
@@ -196,42 +202,5 @@ namespace Recap.ViewModels
                 Articles.Add(article);
             }
         }
-
-        private async Task CacheArticlesAsync(List<Article> articles)
-        {
-            // Cache articles to a temporary file
-            StorageFolder tempFolder = ApplicationData.Current.TemporaryFolder;
-            StorageFile cacheFile = await tempFolder.CreateFileAsync(CacheFileName, CreationCollisionOption.ReplaceExisting);
-            string json = JsonSerializer.Serialize(articles, SerializationContext.Default.ListArticle);
-            await FileIO.WriteTextAsync(cacheFile, json);
-        }
-
-        private async Task<List<Article>> GetCachedArticlesAsync()
-        {
-            try
-            {
-                // Retrieve cached articles from the temporary file
-                StorageFolder tempFolder = ApplicationData.Current.TemporaryFolder;
-                StorageFile cacheFile = await tempFolder.GetFileAsync(CacheFileName);
-                string json = await FileIO.ReadTextAsync(cacheFile);
-                
-                
-                return JsonSerializer.Deserialize(json, SerializationContext.Default.ListArticle);
-            }
-            catch (FileNotFoundException)
-            {
-                return null;
-            }
-        }
-
-        public async Task UpdateCacheAsync(List<Article> articles)
-        {
-            // Update the cache and refresh the articles list
-            await CacheArticlesAsync(articles);
-            RefreshArticles(articles);
-        }
     }
-
-
-
 }

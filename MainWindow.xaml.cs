@@ -35,12 +35,12 @@ namespace Recap
 
         }
 
-        private void MainNavView_Loaded(object sender, RoutedEventArgs e)
+        private async void MainNavView_Loaded(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("MainNavView_Loaded called");
 
             // Update articles when the navigation view is loaded
-            articleViewModel.UpdateArticles();
+            await articleViewModel.UpdateArticles();
 
             // Set the default selected item and navigate to the ArticlePage
             MainNavView.SelectedItem = MainNavView.MenuItems[0];
@@ -102,7 +102,6 @@ namespace Recap
             }
         }
 
-        [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(Page))]
         public Type GetPageType(string tag)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
@@ -178,7 +177,7 @@ namespace Recap
 
                         await FileIO.WriteTextAsync(localFile, JsonSerializer.Serialize(feedList, SerializationContext.Default.ListFeed));
 
-                        await articleViewModel.UpdateCacheAsync(await SyndicationModel.GetArticlesAsync());
+                        await articleViewModel.UpdateArticles();
                     }
                 }
                 else
@@ -200,8 +199,8 @@ namespace Recap
 
         private async void RefreshButton_Click(object sender, RoutedEventArgs args)
         {
-            // Refresh the articles cache
-            await articleViewModel.UpdateCacheAsync(await SyndicationModel.GetArticlesAsync());
+            // Update and refresh the articles.
+            await articleViewModel.UpdateArticles();
         }
     }
 }
